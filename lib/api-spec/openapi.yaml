@@ -1,0 +1,812 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 1.0.0
+  description: Agentpack Protocol - AI Agent Orchestration Platform
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: agents
+    description: AI Agent management
+  - name: tasks
+    description: Task management
+  - name: tools
+    description: Tool/skill management
+  - name: executions
+    description: Agent execution runs
+  - name: logs
+    description: Execution logs
+  - name: dashboard
+    description: Dashboard analytics
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /agents:
+    get:
+      operationId: listAgents
+      tags: [agents]
+      summary: List all agents
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive, running, error]
+        - name: type
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of agents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Agent"
+    post:
+      operationId: createAgent
+      tags: [agents]
+      summary: Create a new agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAgentBody"
+      responses:
+        "201":
+          description: Agent created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+
+  /agents/{agentId}:
+    get:
+      operationId: getAgent
+      tags: [agents]
+      summary: Get a specific agent
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Agent details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+        "404":
+          description: Agent not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateAgent
+      tags: [agents]
+      summary: Update an agent
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAgentBody"
+      responses:
+        "200":
+          description: Agent updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+    delete:
+      operationId: deleteAgent
+      tags: [agents]
+      summary: Delete an agent
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /agents/{agentId}/run:
+    post:
+      operationId: runAgent
+      tags: [agents]
+      summary: Trigger agent execution
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RunAgentBody"
+      responses:
+        "200":
+          description: Execution started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Execution"
+
+  /tasks:
+    get:
+      operationId: listTasks
+      tags: [tasks]
+      summary: List all tasks
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, running, completed, failed, cancelled]
+        - name: agentId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+    post:
+      operationId: createTask
+      tags: [tasks]
+      summary: Create a new task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTaskBody"
+      responses:
+        "201":
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+
+  /tasks/{taskId}:
+    get:
+      operationId: getTask
+      tags: [tasks]
+      summary: Get a specific task
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+    delete:
+      operationId: deleteTask
+      tags: [tasks]
+      summary: Delete a task
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /tools:
+    get:
+      operationId: listTools
+      tags: [tools]
+      summary: List all available tools/skills
+      responses:
+        "200":
+          description: List of tools
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tool"
+    post:
+      operationId: createTool
+      tags: [tools]
+      summary: Register a new tool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateToolBody"
+      responses:
+        "201":
+          description: Tool created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tool"
+
+  /tools/{toolId}:
+    get:
+      operationId: getTool
+      tags: [tools]
+      summary: Get a specific tool
+      parameters:
+        - name: toolId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Tool details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tool"
+    delete:
+      operationId: deleteTool
+      tags: [tools]
+      summary: Delete a tool
+      parameters:
+        - name: toolId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /executions:
+    get:
+      operationId: listExecutions
+      tags: [executions]
+      summary: List agent execution runs
+      parameters:
+        - name: agentId
+          in: query
+          schema:
+            type: integer
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [running, completed, failed, cancelled]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: List of executions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Execution"
+
+  /executions/{executionId}:
+    get:
+      operationId: getExecution
+      tags: [executions]
+      summary: Get a specific execution
+      parameters:
+        - name: executionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Execution details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Execution"
+
+  /executions/{executionId}/logs:
+    get:
+      operationId: getExecutionLogs
+      tags: [logs]
+      summary: Get logs for a specific execution
+      parameters:
+        - name: executionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Execution logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ExecutionLog"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary stats
+      responses:
+        "200":
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/activity:
+    get:
+      operationId: getRecentActivity
+      tags: [dashboard]
+      summary: Get recent activity feed
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Recent activity items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  /dashboard/agent-stats:
+    get:
+      operationId: getAgentStats
+      tags: [dashboard]
+      summary: Get agent performance stats grouped by agent
+      responses:
+        "200":
+          description: Per-agent performance stats
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AgentStat"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - error
+        - message
+
+    Agent:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum: [orchestrator, executor, monitor, analyzer, communicator]
+        status:
+          type: string
+          enum: [active, inactive, running, error]
+        model:
+          type: string
+        systemPrompt:
+          type: string
+        maxTokens:
+          type: integer
+        temperature:
+          type: number
+        toolIds:
+          type: array
+          items:
+            type: integer
+        totalRuns:
+          type: integer
+        successRate:
+          type: number
+        avgDurationMs:
+          type: integer
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - name
+        - type
+        - status
+        - model
+        - totalRuns
+        - successRate
+        - avgDurationMs
+        - createdAt
+        - updatedAt
+
+    CreateAgentBody:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum: [orchestrator, executor, monitor, analyzer, communicator]
+        model:
+          type: string
+        systemPrompt:
+          type: string
+        maxTokens:
+          type: integer
+        temperature:
+          type: number
+        toolIds:
+          type: array
+          items:
+            type: integer
+      required:
+        - name
+        - type
+        - model
+
+    UpdateAgentBody:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+        model:
+          type: string
+        systemPrompt:
+          type: string
+        maxTokens:
+          type: integer
+        temperature:
+          type: number
+        toolIds:
+          type: array
+          items:
+            type: integer
+
+    RunAgentBody:
+      type: object
+      properties:
+        input:
+          type: string
+        context:
+          type: object
+          additionalProperties: true
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [pending, running, completed, failed, cancelled]
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        agentId:
+          type: integer
+        agentName:
+          type: string
+        input:
+          type: string
+        output:
+          type: string
+        errorMessage:
+          type: string
+        startedAt:
+          type: string
+        completedAt:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - title
+        - status
+        - priority
+        - createdAt
+        - updatedAt
+
+    CreateTaskBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        agentId:
+          type: integer
+        input:
+          type: string
+      required:
+        - title
+
+    Tool:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum: [web, data, code, communication, storage, analysis, automation]
+        inputSchema:
+          type: string
+        isEnabled:
+          type: boolean
+        usageCount:
+          type: integer
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - name
+        - category
+        - isEnabled
+        - usageCount
+        - createdAt
+        - updatedAt
+
+    CreateToolBody:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum: [web, data, code, communication, storage, analysis, automation]
+        inputSchema:
+          type: string
+      required:
+        - name
+        - category
+
+    Execution:
+      type: object
+      properties:
+        id:
+          type: integer
+        agentId:
+          type: integer
+        agentName:
+          type: string
+        taskId:
+          type: integer
+        status:
+          type: string
+          enum: [running, completed, failed, cancelled]
+        input:
+          type: string
+        output:
+          type: string
+        errorMessage:
+          type: string
+        tokensUsed:
+          type: integer
+        durationMs:
+          type: integer
+        startedAt:
+          type: string
+        completedAt:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - agentId
+        - agentName
+        - status
+        - createdAt
+
+    ExecutionLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        executionId:
+          type: integer
+        level:
+          type: string
+          enum: [info, warn, error, debug]
+        message:
+          type: string
+        data:
+          type: string
+        timestamp:
+          type: string
+      required:
+        - id
+        - executionId
+        - level
+        - message
+        - timestamp
+
+    DashboardSummary:
+      type: object
+      properties:
+        totalAgents:
+          type: integer
+        activeAgents:
+          type: integer
+        totalTasks:
+          type: integer
+        pendingTasks:
+          type: integer
+        runningTasks:
+          type: integer
+        completedTasks:
+          type: integer
+        failedTasks:
+          type: integer
+        totalExecutions:
+          type: integer
+        successfulExecutions:
+          type: integer
+        avgSuccessRate:
+          type: number
+        totalTokensUsed:
+          type: integer
+        totalTools:
+          type: integer
+      required:
+        - totalAgents
+        - activeAgents
+        - totalTasks
+        - pendingTasks
+        - runningTasks
+        - completedTasks
+        - failedTasks
+        - totalExecutions
+        - successfulExecutions
+        - avgSuccessRate
+        - totalTokensUsed
+        - totalTools
+
+    ActivityItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [agent_run, task_created, task_completed, task_failed, agent_created, tool_used]
+        title:
+          type: string
+        description:
+          type: string
+        agentName:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - type
+        - title
+        - createdAt
+
+    AgentStat:
+      type: object
+      properties:
+        agentId:
+          type: integer
+        agentName:
+          type: string
+        agentType:
+          type: string
+        totalRuns:
+          type: integer
+        successfulRuns:
+          type: integer
+        failedRuns:
+          type: integer
+        successRate:
+          type: number
+        avgDurationMs:
+          type: integer
+        totalTokensUsed:
+          type: integer
+      required:
+        - agentId
+        - agentName
+        - agentType
+        - totalRuns
+        - successfulRuns
+        - failedRuns
+        - successRate
+        - avgDurationMs
+        - totalTokensUsed
