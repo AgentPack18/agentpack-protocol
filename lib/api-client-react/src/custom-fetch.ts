@@ -8,10 +8,13 @@ export const setAuthTokenGetter = (getter: AuthTokenGetter) => {
 };
 
 export const customFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
-  const fullUrl = url.startsWith("http") ? url : url;
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...(options.headers as Record<string, string>),
   };
-  return fetch(fullUrl, { ...options, headers });
+
+  const token = localStorage.getItem("ap_token");
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  return fetch(url, { ...options, headers });
 };

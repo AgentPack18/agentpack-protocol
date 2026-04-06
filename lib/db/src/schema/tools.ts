@@ -11,6 +11,7 @@ export const toolsTable = pgTable("tools", {
   isEnabled: boolean("is_enabled").notNull().default(true),
   usageCount: integer("usage_count").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  userId: text("user_id").notNull().default("anonymous"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 

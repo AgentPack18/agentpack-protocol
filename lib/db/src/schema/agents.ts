@@ -18,6 +18,7 @@ export const agentsTable = pgTable("agents", {
   avgDurationMs: integer("avg_duration_ms").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  userId: text("user_id").notNull().default("anonymous"),
 });
 
 export const insertAgentSchema = createInsertSchema(agentsTable).omit({ id: true, totalRuns: true, successRate: true, avgDurationMs: true, createdAt: true, updatedAt: true });

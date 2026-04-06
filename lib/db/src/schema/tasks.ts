@@ -16,6 +16,7 @@ export const tasksTable = pgTable("tasks", {
   completedAt: timestamp("completed_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  userId: text("user_id").notNull().default("anonymous"),
 });
 
 export const insertTaskSchema = createInsertSchema(tasksTable).omit({ id: true, createdAt: true, updatedAt: true });
