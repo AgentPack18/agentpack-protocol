@@ -22,7 +22,7 @@ export default function Executions() {
 
   const { data: executions, isLoading } = useListExecutions({ limit: 50 });
 
-  const filtered = executions?.filter((e) => {
+  const filtered = (Array.isArray(executions) ? executions : []).filter((e) => {
     const matchStatus = statusFilter === "all" || e.status === statusFilter;
     const matchSearch = e.agentName.toLowerCase().includes(search.toLowerCase()) ||
       (e.input || "").toLowerCase().includes(search.toLowerCase());
@@ -68,7 +68,7 @@ export default function Executions() {
           </div>
         ) : (
           <div className="space-y-2">
-            {filtered?.map((exec) => (
+            {(Array.isArray(filtered) ? filtered : []).map((exec) => (
               <Link key={exec.id} href={`/executions/${exec.id}`}>
                 <Card data-testid={`card-execution-${exec.id}`} className="hover:border-primary/30 transition-colors cursor-pointer">
                   <CardContent className="pt-3 pb-3">

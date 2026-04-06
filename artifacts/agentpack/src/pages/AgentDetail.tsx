@@ -163,7 +163,7 @@ export default function AgentDetail() {
                     </tr>
                   </thead>
                   <tbody>
-                    {executions?.slice(0, 8).map((exec) => (
+                    {(Array.isArray(executions) ? executions : []).slice(0, 8).map((exec) => (
                       <tr key={exec.id} className="border-b border-border/50">
                         <td className="py-2.5 font-mono text-xs text-muted-foreground">#{exec.id}</td>
                         <td className="py-2.5"><SB status={exec.status} /></td>

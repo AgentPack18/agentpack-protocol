@@ -133,7 +133,7 @@ export default function ExecutionDetail() {
               </div>
             ) : (
               <div className="bg-muted/30 rounded-lg p-4 space-y-1.5 font-mono">
-                {logs?.map((log) => (
+                {(Array.isArray(logs) ? logs : []).map((log) => (
                   <div key={log.id} className="flex items-start gap-3 text-xs" data-testid={`log-entry-${log.id}`}>
                     <span className="text-muted-foreground shrink-0 w-40">
                       {new Date(log.timestamp).toLocaleTimeString()}

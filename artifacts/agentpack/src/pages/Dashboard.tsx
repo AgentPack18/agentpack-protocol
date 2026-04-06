@@ -60,7 +60,7 @@ export default function Dashboard() {
   const { data: activity, isLoading: activityLoading } = useGetRecentActivity({ limit: 8 });
   const { data: agentStats, isLoading: statsLoading } = useGetAgentStats();
 
-  const chartData = agentStats?.slice(0, 5).map((a) => ({
+  const chartData = (Array.isArray(agentStats) ? agentStats : []).slice(0, 5).map((a) => ({
     name: a.agentName.split(" ")[0],
     runs: a.totalRuns,
     success: a.successfulRuns,
@@ -131,7 +131,7 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {activity?.map((item) => (
+                  {(Array.isArray(activity) ? activity : []).map((item) => (
                     <div key={item.id} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
                       <div className="mt-0.5">
                         {item.status === "completed" && <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />}
@@ -177,7 +177,7 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {agentStats?.map((stat) => (
+                    {(Array.isArray(agentStats) ? agentStats : []).map((stat) => (
                       <tr key={stat.agentId} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
                         <td className="py-2.5 font-medium text-foreground">{stat.agentName}</td>
                         <td className="py-2.5 text-muted-foreground capitalize">{stat.agentType}</td>

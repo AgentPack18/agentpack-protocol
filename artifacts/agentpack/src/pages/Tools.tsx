@@ -43,7 +43,7 @@ export default function Tools() {
   const { data: tools, isLoading } = useListTools();
   const deleteTool = useDeleteTool();
 
-  const filtered = tools?.filter((t) =>
+  const filtered = (Array.isArray(tools) ? tools : []).filter((t) =>
     t.name.toLowerCase().includes(search.toLowerCase()) ||
     (t.description || "").toLowerCase().includes(search.toLowerCase()) ||
     t.category.toLowerCase().includes(search.toLowerCase())
@@ -92,7 +92,7 @@ export default function Tools() {
           </div>
         ) : (
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered?.map((tool) => {
+            {(Array.isArray(filtered) ? filtered : []).map((tool) => {
               const Icon = categoryIcons[tool.category] || Wrench;
               const colorClass = categoryColors[tool.category] || "text-muted-foreground bg-muted";
               return (

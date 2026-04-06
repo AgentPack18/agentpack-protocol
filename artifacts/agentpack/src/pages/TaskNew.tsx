@@ -131,7 +131,7 @@ export default function TaskNew() {
                       <SelectValue placeholder="Select agent..." />
                     </SelectTrigger>
                     <SelectContent>
-                      {agents?.map((a) => (
+                      {(Array.isArray(agents) ? agents : []).map((a) => (
                         <SelectItem key={a.id} value={String(a.id)}>{a.name}</SelectItem>
                       ))}
                     </SelectContent>

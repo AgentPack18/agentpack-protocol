@@ -32,7 +32,7 @@ export default function Tasks() {
   const { data: tasks, isLoading } = useListTasks();
   const deleteTask = useDeleteTask();
 
-  const filtered = tasks?.filter((t) => {
+  const filtered = (Array.isArray(tasks) ? tasks : []).filter((t) => {
     const matchSearch = t.title.toLowerCase().includes(search.toLowerCase()) ||
       (t.description || "").toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === "all" || t.status === statusFilter;
@@ -110,7 +110,7 @@ export default function Tasks() {
           </div>
         ) : (
           <div className="space-y-2">
-            {filtered?.map((task) => (
+            {(Array.isArray(filtered) ? filtered : []).map((task) => (
               <Card key={task.id} className="hover:border-primary/30 transition-colors" data-testid={`card-task-${task.id}`}>
                 <CardContent className="pt-3 pb-3">
                   <div className="flex items-start gap-3">

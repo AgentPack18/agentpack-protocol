@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Layout } from "@/components/layout/Layout";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -30,11 +30,18 @@ export default function Agents() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  const { data: agents, isLoading } = useListAgents();
+  const [agents, setAgents] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    fetch('/api/agents')
+      .then(r => r.json())
+      .then(d => { setAgents(Array.isArray(d) ? d : []); setIsLoading(false); })
+      .catch(() => setIsLoading(false));
+  }, []);
   const deleteAgent = useDeleteAgent();
   const runAgent = useRunAgent();
 
-  const filtered = agents?.filter((a) =>
+  const filtered = (Array.isArray(agents) ? agents : []).filter((a) =>
     a.name.toLowerCase().includes(search.toLowerCase()) ||
     a.type.toLowerCase().includes(search.toLowerCase()) ||
     (a.description || "").toLowerCase().includes(search.toLowerCase())
@@ -94,7 +101,7 @@ export default function Agents() {
           </div>
         ) : (
           <div className="space-y-3">
-            {filtered?.map((agent) => (
+            {(Array.isArray(filtered) ? filtered : []).map((agent) => (
               <Card key={agent.id} className="hover:border-primary/30 transition-colors cursor-pointer" data-testid={`card-agent-${agent.id}`}>
                 <CardContent className="pt-4 pb-4">
                   <div className="flex items-start gap-4">

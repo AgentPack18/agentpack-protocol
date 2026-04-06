@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
     <title>Agentpack Protocol</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      window.onerror = function(msg, src, line, col, err) {
+        document.body.innerHTML = '<div style="padding:20px;font-family:monospace;color:red;background:white;font-size:14px"><h2>JavaScript Error:</h2><p>' + msg + '</p><p>File: ' + src + '</p><p>Line: ' + line + '</p><pre>' + (err && err.stack ? err.stack : '') + '</pre></div>';
+      };
+      window.addEventListener('unhandledrejection', function(e) {
+        document.body.innerHTML = '<div style="padding:20px;font-family:monospace;color:red;background:white;font-size:14px"><h2>Promise Error:</h2><pre>' + (e.reason && e.reason.stack ? e.reason.stack : e.reason) + '</pre></div>';
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
