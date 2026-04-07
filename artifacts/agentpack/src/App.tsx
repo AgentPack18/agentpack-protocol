@@ -103,7 +103,12 @@ function AuthPage({ mode }: { mode: "login" | "register" }) {
             </span>
           </p>
         </div>
-        <p style={{textAlign:"center",color:"rgba(255,255,255,0.2)",fontSize:"12px",marginTop:"24px"}}>© 2026 Agentpack Protocol. All rights reserved.</p>
+        <div style={{display:"flex",justifyContent:"center",marginTop:"16px"}}>
+          <a href="https://orynth.dev/projects/agentpack-protocol" target="_blank" rel="noopener">
+            <img src="https://orynth.dev/api/badge/agentpack-protocol?theme=light&style=default" alt="Featured on Orynth" width="260" height="80" />
+          </a>
+        </div>
+        <p style={{textAlign:"center",color:"rgba(255,255,255,0.2)",fontSize:"12px",marginTop:"12px"}}>© 2026 Agentpack Protocol. All rights reserved.</p>
       </div>
     </div>
   );
