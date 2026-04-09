@@ -56,8 +56,8 @@ export function Sidebar() {
             <User size={14} color="#a78bfa"/>
           </div>
           <div style={{flex:1,overflow:"hidden"}}>
-            <p style={{color:"white",fontSize:"12px",fontWeight:"600",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{user?.split("@")[0]}</p>
-            <p style={{color:"rgba(255,255,255,0.3)",fontSize:"10px",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{user}</p>
+            <p style={{color:"white",fontSize:"12px",fontWeight:"600",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{user?.name || user?.email?.split("@")[0]}</p>
+            <p style={{color:"rgba(255,255,255,0.3)",fontSize:"10px",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{user?.email}</p>
           </div>
         </div>
         <button onClick={handleLogout}
