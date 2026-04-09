@@ -4,12 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  PNPM_VERSION = "9"
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
-  status = 200
+  PNPM_VERSION = "10"
 
 [[redirects]]
   from = "/*"
