@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: agentpack-api
+    runtime: node
+    buildCommand: npm install -g pnpm && pnpm install --no-frozen-lockfile && pnpm --filter @workspace/api-server run build
+    startCommand: node artifacts/api-server/dist/index.mjs
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
