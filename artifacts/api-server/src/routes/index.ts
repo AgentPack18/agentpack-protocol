@@ -9,11 +9,10 @@ import dashboardRouter from "./dashboard";
 
 const router: IRouter = Router();
 
-function requireAuth(req: Request, res: Response, next: NextFunction) {
+export function requireAuth(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith("Bearer ")) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
+    res.status(401).json({ error: "Unauthorized" }); return;
   }
   try {
     const token = authHeader.split(" ")[1];
