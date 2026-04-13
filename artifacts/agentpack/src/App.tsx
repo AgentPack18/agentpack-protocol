@@ -149,7 +149,7 @@ function AuthProvider({children}:{children:React.ReactNode}) {
 
   const login = async (email: string, password: string) => {
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/.netlify/functions/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -167,7 +167,7 @@ function AuthProvider({children}:{children:React.ReactNode}) {
 
   const register = async (email: string, password: string, name: string) => {
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch("/.netlify/functions/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, name }),
