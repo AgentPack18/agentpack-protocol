@@ -6,6 +6,15 @@
   NODE_VERSION = "20"
   PNPM_VERSION = "10"
 
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/api/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
